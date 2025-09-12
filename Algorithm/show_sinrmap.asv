@@ -1,0 +1,40 @@
+function sinr = show_sinrmap(groundposition, height,pathlossData,N_0)
+    [M,N]=size(groundposition);
+       xmin_g = -100;
+       ymin_g = -160;
+       zMin = 10;
+       grid_resolution = 5;
+       
+            for j = 1:N
+                groundX = groundposition(1,j);
+                groundY = groundposition(2,j);
+                groundXIndex = floor((groundX - xmin_g) / grid_resolution) + 1;
+                groundYIndex = floor((groundY - ymin_g) / grid_resolution) + 1;
+                groundIndex(j) = (groundYIndex-1)*61+groundXIndex;
+            end
+
+       airIndex = floor((height - zMin) / grid_resolution)+1;
+     for s = 1:N
+       for i =1:60
+           for j =1:64
+               groundIndex_rid_s=groundIndex;
+               groundIndex_rid_s(s)=[];
+               sinr(i,j,s)=log2(1+10^(-pathlossData(i,j,airIndex,groundIndex(s))/10)/(sum(10.^(-pathlossData(i,j,airIndex,groundIndex_rid_s)/10))+N_0));
+           end
+       end
+     end
+
+    % 展示热图
+    figure;
+    for s = 1:N
+        subplot(ceil(sqrt(N)), ceil(sqrt(N)), s); % 创建子图
+        imagesc(sinr(:, :, s)); % 使用 imagesc 函数展示 SINR 热图
+        colorbar; % 添加颜色条
+        title(['SINR Map for Ground Position ' num2str(s)]); % 添加标题
+        xlabel('X Grid');
+        ylabel('Y Grid');
+    end
+
+    % 调整子图布局
+    sgtitle('SINR Maps for Different Ground Positions'); % 添加整体标题
+end

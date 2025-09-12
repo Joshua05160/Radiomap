@@ -1,0 +1,62 @@
+function [positions, velocities] = initialize_particles(start_position, end_position, M, T, numParticles, lastBestPosition, speedLimit)
+    % start_position 和 end_position 是 3x1 向量，表示 UAV 的起点和终点
+    % M 是位置的维度数目
+    % T 是时间步长
+    % numParticles 是粒子的数量
+    
+    % 初始化粒子位置
+    positions = zeros(3, M, T, numParticles);
+    
+    % 设置第一个粒子的位置为上次优化的最优位置
+    positions(:, :, :, 1) = lastBestPosition;
+    
+    % 设置所有粒子的初始位置为相同的起点和终点
+    for i = 1:numParticles
+        positions(:, :, 1, i) = start_position; % 初始化起点
+        positions(:, :, T, i) = end_position; % 初始化终点
+    end
+    
+    % 为其他粒子的中间位置生成随机噪声
+    for i = 2:numParticles/2
+        for t = 2:(T-1)
+            for m = 1:M
+                % 获取第一个粒子的对应位置
+                reference_position = positions(:, m, t, 1);
+                
+                % 在参考位置上添加随机噪声
+                noise = (rand(3, 1) - 0.5) * 2*speedLimit;
+                new_position = reference_position + noise;
+                
+                % 确保新位置与参考位置的距离不超过速度限制
+                % while norm(new_position - reference_position) > 1.732 * speedLimit
+                %     noise = (rand(3, 1) - 0.5) * 2 * speedLimit;
+                %     new_position = reference_position + noise;
+                % end
+                % 
+                positions(:, m, t, i) = new_position;
+            end
+        end
+    end
+    for i = numParticles/2+1:numParticles
+        for t = 2:(T-1)
+            for m = 1:M
+                prev_position = positions(:, m, t - 1, i);                
+                % 根据剩余步数计算每步最大移动距离
+                new_position = prev_position + (rand(3, 1) - 0.5) * 2 * speedLimit;
+                
+                % 确保新位置与前一个位置的距离不超过速度限制
+                while norm(new_position - prev_position) > 1.732*speedLimit
+                    new_position = prev_position + (rand(3, 1) - 0.5) * 2 * speedLimit;
+                end
+                positions(:, m, t, i) = new_position;
+            end
+        end
+    end
+
+    % 初始化粒子速度
+    velocities = 2 * 10 * rand(3, M, T, numParticles) - 10;  % 在[-10, 10]范围内生成随机速度
+    
+    % 固定起点和终点的速度为0
+    velocities(:, :, 1, :) = 0;
+    velocities(:, :, T, :) = 0;
+end
