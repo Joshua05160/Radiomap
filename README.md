@@ -1,7 +1,7 @@
 # Radiomap
 
 > Open-source code for Radio Map-Enabled 3D Trajectory and Communication
-Optimization for Low-Altitude Air-Ground Cooperation （GC-Workshop-2026）
+Optimization for Low-Altitude Air-Ground Cooperation （GC-2026-Workshops）
 > 
 ## Project Overview
 
