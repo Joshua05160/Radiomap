@@ -1,6 +1,6 @@
 # Radiomap
 
-> Open source code for Radio Map-Enabled 3D Trajectory and Communication
+> Open-source code for Radio Map-Enabled 3D Trajectory and Communication
 Optimization for Low-Altitude Air-Ground Cooperation （GC-Workshop-2026）
 > 
 ## Project Overview
@@ -23,10 +23,6 @@ Radiomap/
 └── README.md              # Project documentation
 ```
 
-## Requirements
-
-- MATLAB R2018b or higher
-
 ## Basic Usage
 
 1. **Prepare OSM data file**: Download the required area `.osm` file from [OpenStreetMap](https://www.openstreetmap.org/)
@@ -43,9 +39,9 @@ buildings = extractAndVisualizeBuildingsFromOSM(osmFile);
 
 The project employs the following core algorithms:
 
-- **SCA-Based Communication Scheduling Optimazation**
-- **SCA-Based Power Optimazation**
-- **SCA-Based UAVs' Trajactory Initilization**
+- **SCA-Based Communication Scheduling Optimization**
+- **SCA-Based Power Optimization**
+- **SCA-Based UAVs' Trajectory Initialization**
 - **PSO-CM-Based UAVs' Trajectory Optimization**
 
 ## Acknowledgments
